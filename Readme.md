@@ -4,14 +4,7 @@
 
 # Installation
 
-## Prerequistes
-
-You need to have a "Disable Content-Security-Policy" extension installed in your browser.<br>
-This is because we haven't spent the time to add this to our extension.
-
-[https://chrome.google.com/webstore/detail/disable-content-security/ieelmcmcagommplceebfedjlakkhpden](https://chrome.google.com/webstore/detail/disable-content-security/ieelmcmcagommplceebfedjlakkhpden)
-
-## Building and installing the extensino.
+## Building and installing the extension.
 
 1. Start by creating a personal access token in Asana
 
@@ -31,15 +24,21 @@ yarn build
 
 7. Drag the extension folder from the folder explore to the chrome://extensions tab you should have open in your browser
 
+### Creating Asana persional access token
+
+1. Login to asana
+2. Open "My Profile Settings"
+3. Go to to the Apps tab
+4. Click the "Manage Developer Apps"
+5. Click "Creat New Personal Access Token"
 
 # Usage
 
-1. Go to Github
-2. Make sure that the "Disable Content-Security-Policy" extension is on
-3. Brows away. The extension should do it's work automatically.
+1. Go to https://github.com
+2. Browse away. The extension should do it's work automatically.
 
 ## This doesn't work for me, what do I do?
 
-1. Make sure the extension is installed
-2. Make sure that "Disable Content-Security-Policy" is turned on
+1. Make sure you updated the personal access token before building
+2. Make sure the extension is installed and up to date
 3. Refresh the page.
