@@ -1,0 +1,11 @@
+{
+  "name": "travelshift_chrome_extension_for_github_asana_intergration",
+  "version": "1.0.0",
+  "scripts": {
+  	"watch": "node node_modules/.bin/webpack --progress --watch",
+  	"build": "node node_modules/.bin/webpack --progress"
+  },
+  "dependencies": {
+    "webpack": "^3.10.0"
+  }
+}
