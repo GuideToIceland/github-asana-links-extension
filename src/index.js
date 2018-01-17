@@ -70,7 +70,7 @@ function updateLinksToAsanaReferences() {
 			continue;
 		}
 
-		console.log('Did not lookup' ,linkText);
+		// console.log('Did not lookup' ,linkText);
 
 	}
 }
@@ -126,7 +126,7 @@ function updateCommitTextAsana()
 			continue;
 		}
 
-		console.log('Did not lookup' ,linkText);
+		// console.log('Did not lookup' ,linkText);
 	}
 }
 
@@ -154,10 +154,8 @@ function updateFullAsanaLink(linkItem, linkText, asanaTaskId, prefix) {
 	  .then(json => {
 	  	const task = json.data;
 	  	thisRow.innerText = '[Asana] ' + '(' + (task.completed?'CLOSED':'OPEN') + ') --- ' + prefix  + task.name;
-	  	//console.log(json.data);
 	  })
 	  .catch(error => {
-	  	//console.log(error);
 	  	thisRow.innerText = "(BORKEN) " + prefix + linkText;
 	  });
 }
@@ -165,6 +163,11 @@ function updateFullAsanaLink(linkItem, linkText, asanaTaskId, prefix) {
 function makePrTitleUsable()
 {
 	const titleElement = document.querySelector('.js-issue-title');
+	if(!titleElement)
+	{
+		return;
+	}
+
 	if(titleElement.innerText.toLowerCase().indexOf('asana/') === 0)
 	{
 		let text = titleElement.innerText.slice('asana/'.length);
@@ -185,7 +188,7 @@ function makePrTitleUsable()
 		newAnchor.setAttribute('href', linkHref);
 		newAnchor.setAttribute('target', '_blank');
 		newAnchor.innerText = linkHref;
-		titleElement.innerText = '[Asana] ';
+		titleElement.innerText = '';
 		titleElement.appendChild(newAnchor);
 
 		const asanaId = extractAsanaIdFromAppHref(linkHref)
@@ -203,27 +206,22 @@ function makePrTitleUsable()
 		newAnchor.setAttribute('href', linkHref);
 		newAnchor.setAttribute('target', '_blank');
 		newAnchor.innerText = linkHref;
-		titleElement.innerText = '[Asana] ';
+		titleElement.innerText = '';
 		titleElement.appendChild(newAnchor);
 
 		updateFullAsanaLink(newAnchor, linkHref, asanaId, '');
 	}
 }
 
-if(window.location.href.indexOf('GuideToIceland') > 0 && window.location.href.indexOf('/pulls') > 0)
-{
+function hookUpLinks() {
+
 	setInterval(updateLinksToAsanaReferences, 2000);
 	updateLinksToAsanaReferences();
-}
-else if(window.location.href.indexOf('GuideToIceland') > 0 && window.location.href.indexOf('/pull') > 0)
-{
 	setInterval(makePrTitleUsable, 2000);
 	makePrTitleUsable();
-}
-
-
-if(window.location.href.indexOf('GuideToIceland') > 0 && window.location.href.indexOf('/branches') > 0)
-{
 	setInterval(updateCommitTextAsana, 2000);
 	updateCommitTextAsana();
 }
+
+setTimeout(hookUpLinks, 500);
+
