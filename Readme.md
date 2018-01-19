@@ -4,25 +4,29 @@
 
 # Installation
 
-## Building and installing the extension.
+## Building
 
 1. Start by creating a personal access token in Asana
-
 2. Update the top line of the `src/index.js` file with your token
-
 3. Run
+
 ```
 yarn install
 yarn build
 ```
 
-4. Now open up [chrome://extensions](chrome://extensions) in your browser.
+## Installing on Chrome
 
-5. Make sure that the developer mode is enabled in the top right.
+1. Now open up [chrome://extensions](chrome://extensions) in your browser.
+2. Make sure that the developer mode is enabled in the top right.
+3. Open up the this source directory in a folder explorer (Explorer on windows, Nautilus on ubuntu ...)
+4. Drag the extension folder from the folder explore to the chrome://extensions tab you should have open in your browser
 
-6. Open up the this source directory in a folder explorer (Explorer on windows, Nautilus on ubuntu ...)
+## Installing on Firefox
 
-7. Drag the extension folder from the folder explore to the chrome://extensions tab you should have open in your browser
+1. Now open up [about:debugging](about:debugging) in your browser.
+2. Click the "Load Temporary Add-on" button
+3. Navigate to the extension folder and choose the manifest file.
 
 ### Creating Asana persional access token
 

@@ -15,11 +15,11 @@
     "browsingData",
     "activeTab",
     "storage",
-    "*://*.github.com/*"
+    "*://*.github.com/*",
+    "https://app.asana.com/*"
   ],
   "background": {
-    "scripts": ["bundle/background.js"],
-    "persistent": true
+    "scripts": ["bundle/background.js"]
   },
   "content_scripts": [
     {
@@ -27,5 +27,5 @@
       "js": ["bundle/index.js"]
     }
   ],
-  "content_security_policy": "script-src 'self' https://app.asana.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://app.asana.com/*; object-src 'self'"
 }
