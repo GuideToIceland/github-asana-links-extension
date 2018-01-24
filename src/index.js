@@ -1,4 +1,18 @@
-const personalAccessToken = '<Please insert token here>';
+let personalAccessToken = undefined;
+
+
+chrome.storage.sync.get('asanaToken', (result) => {
+	if(result && result.asanaToken) {
+		personalAccessToken = result.asanaToken;
+		console.log("We got the token!!!");
+	}
+	else
+	{
+		console.log("We got not token.");
+		console.log("Please enter a valid one into the extension");
+	}
+});
+
 
 function extractAsanaIdFromAppHref(asanaHref)
 {
@@ -27,6 +41,10 @@ function extractAsanaIdFromAppHref(asanaHref)
 }
 
 function updateLinksToAsanaReferences() {
+
+	if(!personalAccessToken) {
+		return;
+	}
 
 	let linkItems = document.querySelectorAll('a.link-gray-dark.no-underline.h4.js-navigation-open');
 	for(var linkItem of linkItems) {
@@ -77,6 +95,10 @@ function updateLinksToAsanaReferences() {
 
 function updateCommitTextAsana()
 {
+	if(!personalAccessToken) {
+		return;
+	}
+
 	const linkItems = document.querySelectorAll('.branch-name');
 	for(var linkItem of linkItems) {
 		let linkText = linkItem.innerText;
@@ -144,24 +166,29 @@ function updateFullAsanaLink(linkItem, linkText, asanaTaskId, prefix) {
 		headers: new Headers({
 			'Authorization': 'Bearer ' + personalAccessToken
 		})
-	}).then((response) => {
-		if(response.status === 200)
-		{
-			return response.json();
-		}
-		throw Error(response.statusText);
 	})
-	  .then(json => {
-	  	const task = json.data;
-	  	thisRow.innerText = '[Asana] ' + '(' + (task.completed?'CLOSED':'OPEN') + ') --- ' + prefix  + task.name;
-	  })
-	  .catch(error => {
-	  	thisRow.innerText = "(BORKEN) " + prefix + linkText;
-	  });
+		.then((response) => {
+			if(response.status === 200)
+			{
+				return response.json();
+			}
+			throw Error(response.statusText);
+		})
+		.then(json => {
+			const task = json.data;
+			thisRow.innerText = '[Asana] ' + '(' + (task.completed?'CLOSED':'OPEN') + ') --- ' + prefix  + task.name;
+		})
+		.catch(error => {
+			thisRow.innerText = "(BORKEN) " + prefix + linkText;
+		});
 }
 
 function makePrTitleUsable()
 {
+	if(!personalAccessToken) {
+		return;
+	}
+
 	const titleElement = document.querySelector('.js-issue-title');
 	if(!titleElement)
 	{
@@ -224,4 +251,3 @@ function hookUpLinks() {
 }
 
 setTimeout(hookUpLinks, 500);
-

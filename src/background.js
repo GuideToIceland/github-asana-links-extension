@@ -1,4 +1,5 @@
 
+
 var onHeadersReceived = function(details) {
 
   for (var i = 0; i < details.responseHeaders.length; i++) {
