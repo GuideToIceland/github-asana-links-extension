@@ -4,12 +4,10 @@ let personalAccessToken = undefined;
 chrome.storage.sync.get('asanaToken', (result) => {
 	if(result && result.asanaToken) {
 		personalAccessToken = result.asanaToken;
-		console.log("We got the token!!!");
 	}
 	else
 	{
-		console.log("We got not token.");
-		console.log("Please enter a valid one into the extension");
+		console.log("Asana token not set — please enter a valid one into the extension");
 	}
 });
 
@@ -49,15 +47,15 @@ function updateLinksToAsanaReferences() {
 	let linkItems = document.querySelectorAll('a.link-gray-dark.no-underline.h4.js-navigation-open');
 	for(var linkItem of linkItems) {
 		let linkText = linkItem.innerText;
-		if(linkText.indexOf('(Loading...)') === 0)
+		if(linkText.indexOf('⏳') === 0)
 		{
 			continue;
 		}
-		if(linkText.indexOf('[Asana]') === 0)
+		if(linkText.indexOf('[asana]') === 0)
 		{
 			continue;
 		}
-		if(linkText.indexOf('(BORKEN)') === 0)
+		if(linkText.indexOf('⚠️') === 0)
 		{
 			continue;
 		}
@@ -93,6 +91,21 @@ function updateLinksToAsanaReferences() {
 	}
 }
 
+function fixBlameLinks() {
+	let linkItems = document.querySelectorAll('.blame-commit a');
+	for(var linkItem of linkItems) {
+		let linkText = linkItem.innerText;
+
+		if(linkText.indexOf('app.asana.com') > 1)
+		{
+			const commitLink = linkItem.parentElement.querySelector('a');
+			commitLink.innerText = linkText;
+			linkItem.parentElement.removeChild(linkItem);
+			continue;
+		}
+	}
+}
+
 function updateCommitTextAsana()
 {
 	if(!personalAccessToken) {
@@ -102,15 +115,15 @@ function updateCommitTextAsana()
 	const linkItems = document.querySelectorAll('.branch-name');
 	for(var linkItem of linkItems) {
 		let linkText = linkItem.innerText;
-		if(linkText.indexOf('(Loading...)') === 0)
+		if(linkText.indexOf('⏳') === 0)
 		{
 			continue;
 		}
-		if(linkText.indexOf('[Asana]') === 0)
+		if(linkText.indexOf('[asana]') === 0)
 		{
 			continue;
 		}
-		if(linkText.indexOf('(BORKEN)') === 0)
+		if(linkText.indexOf('⚠️') === 0)
 		{
 			continue;
 		}
@@ -160,26 +173,16 @@ function updateFullAsanaLink(linkItem, linkText, asanaTaskId, prefix) {
 		prefix = prefix + ' ';
 	}
 
-	thisRow.innerText = '(Loading...) ' + prefix + linkText;
-
-	fetch("https://app.asana.com/api/1.0/tasks/" + asanaTaskId,{
-		headers: new Headers({
-			'Authorization': 'Bearer ' + personalAccessToken
-		})
-	})
-		.then((response) => {
-			if(response.status === 200)
-			{
-				return response.json();
+	thisRow.innerText = '⏳ ' + prefix + linkText;
+	
+	chrome.runtime.sendMessage(
+		{queryType: "asanaTask", taskId: asanaTaskId, personalAccessToken},
+		({task, error}) => {
+			if (error) {
+				thisRow.innerText = "⚠️ " + prefix + linkText;
+			} else {
+				thisRow.innerText = (task.completed ? '✅' : '') + '[asana] ' + ' - ' + prefix  + task.name;
 			}
-			throw Error(response.statusText);
-		})
-		.then(json => {
-			const task = json.data;
-			thisRow.innerText = '[Asana] ' + '(' + (task.completed?'CLOSED':'OPEN') + ') --- ' + prefix  + task.name;
-		})
-		.catch(error => {
-			thisRow.innerText = "(BORKEN) " + prefix + linkText;
 		});
 }
 
@@ -248,6 +251,7 @@ function hookUpLinks() {
 	makePrTitleUsable();
 	setInterval(updateCommitTextAsana, 2000);
 	updateCommitTextAsana();
+	fixBlameLinks();
 }
 
 setTimeout(hookUpLinks, 500);

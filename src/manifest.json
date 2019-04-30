@@ -5,12 +5,6 @@
   "description": "This extension facilitates usage of Github when Asana links are used for branches and/or pull requests",
   "version": "1.0",
 
-  "applications": {
-    "gecko": {
-      "id": "github-asana-link@extension.com"
-    }
-  },
-
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
@@ -25,12 +19,12 @@
     "https://app.asana.com/*"
   ],
   "background": {
-    "scripts": ["bundle/background.js"]
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
       "matches": ["*://*.github.com/*"],
-      "js": ["bundle/index.js"]
+      "js": ["index.js"]
     }
   ],
   "content_security_policy": "script-src 'self' https://app.asana.com/*; object-src 'self'"
