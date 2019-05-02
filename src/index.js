@@ -11,6 +11,10 @@ chrome.storage.sync.get('asanaToken', (result) => {
 	}
 });
 
+const isAlreadyLoaded = (text) => 
+	['⏳', '⚠️', '[asana]'].some((str) =>
+		text.includes(str)
+	)
 
 function extractAsanaIdFromAppHref(asanaHref)
 {
@@ -47,16 +51,7 @@ function updateLinksToAsanaReferences() {
 	let linkItems = document.querySelectorAll('a.link-gray-dark.no-underline.h4.js-navigation-open');
 	for(var linkItem of linkItems) {
 		let linkText = linkItem.innerText;
-		if(linkText.indexOf('⏳') === 0)
-		{
-			continue;
-		}
-		if(linkText.indexOf('[asana]') === 0)
-		{
-			continue;
-		}
-		if(linkText.indexOf('⚠️') === 0)
-		{
+		if(isAlreadyLoaded(linkText)) {
 			continue;
 		}
 		if(linkText.toLowerCase().indexOf('vr/') === 0)
@@ -115,16 +110,7 @@ function updateCommitTextAsana()
 	const linkItems = document.querySelectorAll('.branch-name');
 	for(var linkItem of linkItems) {
 		let linkText = linkItem.innerText;
-		if(linkText.indexOf('⏳') === 0)
-		{
-			continue;
-		}
-		if(linkText.indexOf('[asana]') === 0)
-		{
-			continue;
-		}
-		if(linkText.indexOf('⚠️') === 0)
-		{
+		if(isAlreadyLoaded(linkText)) {
 			continue;
 		}
 		if(linkText.toLowerCase().indexOf('vr/') === 0)
