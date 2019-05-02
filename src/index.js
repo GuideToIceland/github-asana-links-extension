@@ -93,9 +93,6 @@ function updateLinksToAsanaReferences() {
 			updateFullAsanaLink(linkItem, linkText, asanaTaskId, '');
 			continue;
 		}
-
-		// console.log('Did not lookup' ,linkText);
-
 	}
 }
 
@@ -159,8 +156,6 @@ function updateCommitTextAsana()
 			updateFullAsanaLink(linkItem, linkText, asanaTaskId, prefix);
 			continue;
 		}
-
-		// console.log('Did not lookup' ,linkText);
 	}
 }
 
@@ -211,7 +206,6 @@ function makePrTitleUsable()
 		const linkHref = 'https://app.asana.com/0/0/' + text + '/f';
 
 		var newAnchor = document.createElement('a');
-		//newAnchor.setAttribute('class', 'js-issue-title')
 		newAnchor.setAttribute('href', linkHref);
 		newAnchor.setAttribute('target', '_blank');
 		newAnchor.innerText = linkHref;
@@ -229,7 +223,6 @@ function makePrTitleUsable()
 		const linkHref = 'https://app.asana.com/0/0/' + asanaId + '/f';
 
 		var newAnchor = document.createElement('a');
-		//newAnchor.setAttribute('class', 'js-issue-title')
 		newAnchor.setAttribute('href', linkHref);
 		newAnchor.setAttribute('target', '_blank');
 		newAnchor.innerText = linkHref;
