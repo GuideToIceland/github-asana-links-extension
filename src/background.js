@@ -19,11 +19,11 @@ var filter = {
 chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, filter, ["blocking", "responseHeaders"]);
 
 const messageListener = function(request, sender, sendResponse) {
-  const { queryType, taskId, personalAccessToken } = request;
+  const { queryType, taskId, accessToken } = request;
   if(queryType === "asanaTask") {
     fetch("https://app.asana.com/api/1.0/tasks/" + taskId, {
       headers: new Headers({
-        'Authorization': 'Bearer ' + personalAccessToken
+        'Authorization': 'Bearer ' + accessToken
       })
     })
       .then((response) => {

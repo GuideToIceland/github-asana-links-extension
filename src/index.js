@@ -16,6 +16,19 @@ const isAlreadyLoaded = (text) =>
 		text.includes(str)
 	)
 
+const fetchAsanaTask = (taskId, accessToken) =>
+	new Promise((resolve, reject) => 
+		chrome.runtime.sendMessage(
+			{queryType: "asanaTask", taskId, accessToken},
+			({task, error}) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(task);
+				}
+			})
+	)
+
 function extractAsanaIdFromAppHref(asanaHref)
 {
 	asanaHref = asanaHref.trim().toLowerCase();
@@ -160,15 +173,13 @@ function updateFullAsanaLink(linkItem, linkText, asanaTaskId, prefix) {
 	}
 
 	thisRow.innerText = '⏳ ' + prefix + linkText;
-	
-	chrome.runtime.sendMessage(
-		{queryType: "asanaTask", taskId: asanaTaskId, personalAccessToken},
-		({task, error}) => {
-			if (error) {
-				thisRow.innerText = "⚠️ " + prefix + linkText;
-			} else {
-				thisRow.innerText = (task.completed ? '✅' : '') + '[asana] ' + ' - ' + prefix  + task.name;
-			}
+
+	fetchAsanaTask(asanaTaskId, personalAccessToken)
+		.then(task => {
+			thisRow.innerText = (task.completed ? '✅' : '') + '[asana] ' + ' - ' + prefix  + task.name;
+		})
+		.catch(error => {
+			thisRow.innerText = "⚠️ " + prefix + linkText;
 		});
 }
 
