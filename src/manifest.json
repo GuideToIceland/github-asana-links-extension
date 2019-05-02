@@ -3,7 +3,7 @@
   "name": "Travelshift Github Asana link lookup engine",
   "short_name": "Github <=> Asana",
   "description": "This extension facilitates usage of Github when Asana links are used for branches and/or pull requests",
-  "version": "1.0",
+  "version": "1.1",
 
   "browser_action": {
     "default_icon": "icon.png",
